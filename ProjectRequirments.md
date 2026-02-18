@@ -12,4 +12,3 @@
 - **AI opponent** — pattern recognition, adaptive difficulty
 - **Tournament mode** — brackets, spectators, replays
 
-> If you finish in 10 minutes... you are not done. Make it amazing.

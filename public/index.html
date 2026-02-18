@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Paper Scissors</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">Rock Paper Scissors</h1>
+    <p class="player-count"><span id="player-count">0</span> players online</p>
+
+    <!-- JOIN / LOBBY SCREEN -->
+    <div id="screen-join" class="screen active">
+      <div id="join-form">
+        <input type="text" id="name-input" placeholder="Enter your name" maxlength="20" autocomplete="off">
+        <button id="btn-join" class="btn btn-primary">Join Game</button>
+      </div>
+
+      <div id="lobby" class="hidden">
+        <p class="welcome">Welcome, <span id="player-name"></span>!</p>
+        <button id="btn-find-match" class="btn btn-primary">Find Match</button>
+        <button id="btn-leaderboard" class="btn btn-secondary">Leaderboard</button>
+        <p id="match-status" class="status hidden">Searching for opponent...</p>
+      </div>
+
+      <div id="leaderboard-panel" class="hidden">
+        <h2>Leaderboard</h2>
+        <table id="leaderboard-table">
+          <thead>
+            <tr><th>#</th><th>Player</th><th>W</th><th>L</th><th>Streak</th></tr>
+          </thead>
+          <tbody id="leaderboard-body"></tbody>
+        </table>
+        <button id="btn-close-leaderboard" class="btn btn-secondary">Close</button>
+      </div>
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div id="screen-game" class="screen">
+      <div class="game-info">
+        <p class="opponent-label">vs <span id="opponent-name"></span></p>
+        <p class="round-label">Round <span id="round-number">1</span></p>
+        <div class="scoreboard">
+          <span class="score-you">You: <span id="score-you">0</span></span>
+          <span class="score-divider">|</span>
+          <span class="score-opponent">Them: <span id="score-opponent">0</span></span>
+        </div>
+      </div>
+
+      <p id="game-status" class="status">Make your choice!</p>
+
+      <div class="choices">
+        <button class="choice-btn" data-choice="rock">
+          <span class="choice-emoji">&#x1F44A;</span>
+          <span class="choice-label">Rock</span>
+        </button>
+        <button class="choice-btn" data-choice="paper">
+          <span class="choice-emoji">&#x1F590;</span>
+          <span class="choice-label">Paper</span>
+        </button>
+        <button class="choice-btn" data-choice="scissors">
+          <span class="choice-emoji">&#x270C;</span>
+          <span class="choice-label">Scissors</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div id="screen-result" class="screen">
+      <div class="result-choices">
+        <div class="result-choice result-you">
+          <p>You</p>
+          <span id="result-your-choice" class="result-emoji"></span>
+        </div>
+        <div class="result-vs">VS</div>
+        <div class="result-choice result-them">
+          <p>Them</p>
+          <span id="result-opponent-choice" class="result-emoji"></span>
+        </div>
+      </div>
+
+      <h2 id="result-text" class="result-text"></h2>
+
+      <div class="result-scores">
+        <span>You: <span id="result-score-you">0</span></span>
+        <span> - </span>
+        <span>Them: <span id="result-score-opponent">0</span></span>
+      </div>
+
+      <div id="round-buttons">
+        <button id="btn-next-round" class="btn btn-primary">Next Round</button>
+      </div>
+
+      <div id="game-over-buttons" class="hidden">
+        <h2 id="game-over-text" class="game-over-text"></h2>
+        <button id="btn-play-again" class="btn btn-primary">Play Again</button>
+        <button id="btn-back-lobby" class="btn btn-secondary">Back to Lobby</button>
+        <p id="rematch-status" class="status hidden"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
