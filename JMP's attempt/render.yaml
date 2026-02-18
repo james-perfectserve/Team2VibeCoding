@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: rps-realtime
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: node server/index.js
+    envVars:
+      - key: PORT
+        value: 3000
