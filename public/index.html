@@ -53,15 +53,15 @@
 
       <div class="choices">
         <button class="choice-btn" data-choice="rock">
-          <span class="choice-emoji">&#x1F44A;</span>
+          <span class="choice-emoji">👊</span>
           <span class="choice-label">Rock</span>
         </button>
         <button class="choice-btn" data-choice="paper">
-          <span class="choice-emoji">&#x1F590;</span>
+          <span class="choice-emoji">🖐️</span>
           <span class="choice-label">Paper</span>
         </button>
         <button class="choice-btn" data-choice="scissors">
-          <span class="choice-emoji">&#x270C;</span>
+          <span class="choice-emoji">✌️</span>
           <span class="choice-label">Scissors</span>
         </button>
       </div>
@@ -69,6 +69,9 @@
 
     <!-- RESULT SCREEN -->
     <div id="screen-result" class="screen">
+      <!-- 3D Battle Animation Container -->
+      <div id="hand3d-battle" class="hand-3d-battle-container"></div>
+      
       <div class="result-choices">
         <div class="result-choice result-you">
           <p>You</p>
@@ -103,6 +106,8 @@
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.152.0/build/three.min.js"></script>
+  <script src="hands3d.js"></script>
   <script src="game.js"></script>
 </body>
 </html>

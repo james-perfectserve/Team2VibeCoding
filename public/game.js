@@ -44,6 +44,15 @@ const choiceEmojis = {
   scissors: '\u{270C}\u{FE0F}',
 };
 
+// ── 3D Battle Renderer ─────────────────────────────────────
+// Lazy initialization for battle animation
+let battleRenderer = null;
+
+// Handle window resize for battle renderer
+window.addEventListener('resize', () => {
+  if (battleRenderer) battleRenderer.resize();
+});
+
 // ── Screen Management ──────────────────────────────────────
 function showScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -98,6 +107,9 @@ $choiceBtns.forEach(btn => {
 
 // ── Result ─────────────────────────────────────────────────
 $btnNextRound.addEventListener('click', () => {
+  // Clear battle animation
+  if (battleRenderer) battleRenderer.clear();
+  
   showScreen('game');
   resetGameUI();
 });
@@ -164,8 +176,26 @@ socket.on('round-result', ({ yourChoice, opponentChoice, result, scores, round }
   // Show result screen
   showScreen('result');
 
+  // Show emojis
   $resultYourChoice.textContent = choiceEmojis[yourChoice];
   $resultOpponentChoice.textContent = choiceEmojis[opponentChoice];
+
+  // Initialize battle renderer if not done yet
+  if (!battleRenderer && typeof THREE !== 'undefined' && typeof Hand3DBattleRenderer !== 'undefined') {
+    try {
+      battleRenderer = new Hand3DBattleRenderer('hand3d-battle');
+      console.log('Battle renderer initialized!');
+    } catch (e) {
+      console.error('Failed to initialize battle renderer:', e);
+    }
+  }
+
+  // Play battle animation
+  if (battleRenderer) {
+    setTimeout(() => {
+      battleRenderer.playBattle(yourChoice, opponentChoice, result);
+    }, 200);
+  }
 
   $resultText.className = 'result-text';
   if (result === 'win') {

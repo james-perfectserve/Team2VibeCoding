@@ -248,7 +248,9 @@ body {
 }
 
 .choice-emoji {
-  font-size: 3rem;
+  font-size: 3.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
 }
 
 .choice-label {
@@ -306,6 +308,31 @@ body {
   font-size: 1.2rem;
   font-weight: 700;
   color: #555;
+}
+
+/* ── 3D Battle Animation Container ─────────────────────────────── */
+.hand-3d-battle-container {
+  width: 100%;
+  max-width: 400px;
+  height: 300px;
+  margin: 1rem auto;
+  border-radius: 16px;
+  background: radial-gradient(circle at center, rgba(127, 90, 240, 0.15), transparent);
+  position: relative;
+  overflow: visible;
+  display: block;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.hand-3d-battle-container canvas {
+  display: block;
+  border-radius: 16px;
+}
+
+@media (max-width: 500px) {
+  .hand-3d-battle-container {
+    height: 250px;
+  }
 }
 
 .result-text {
