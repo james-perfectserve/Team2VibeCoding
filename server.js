@@ -84,13 +84,20 @@ function resolveRound(gameId, game) {
   if (result === 'player1') game.scores[p1Id]++;
   else if (result === 'player2') game.scores[p2Id]++;
 
-  // Send personalized results to each player
+  // Check for match winner BEFORE sending results
+  const p1Wins = game.scores[p1Id] >= game.winsNeeded;
+  const p2Wins = game.scores[p2Id] >= game.winsNeeded;
+  const isMatchOver = p1Wins || p2Wins;
+
+  // Send personalized results — include whether match is over
   io.to(p1Id).emit('round-result', {
     yourChoice: c1,
     opponentChoice: c2,
     result: result === 'player1' ? 'win' : result === 'player2' ? 'lose' : 'draw',
     scores: { you: game.scores[p1Id], opponent: game.scores[p2Id] },
     round: game.round,
+    isMatchOver,
+    matchResult: isMatchOver ? (p1Wins ? 'win' : 'lose') : null,
   });
 
   io.to(p2Id).emit('round-result', {
@@ -99,12 +106,13 @@ function resolveRound(gameId, game) {
     result: result === 'player2' ? 'win' : result === 'player1' ? 'lose' : 'draw',
     scores: { you: game.scores[p2Id], opponent: game.scores[p1Id] },
     round: game.round,
+    isMatchOver,
+    matchResult: isMatchOver ? (p2Wins ? 'win' : 'lose') : null,
   });
 
-  // Check for match winner
-  if (game.scores[p1Id] >= game.winsNeeded) {
+  if (p1Wins) {
     endGame(gameId, game, p1Id, p2Id);
-  } else if (game.scores[p2Id] >= game.winsNeeded) {
+  } else if (p2Wins) {
     endGame(gameId, game, p2Id, p1Id);
   } else {
     // Next round

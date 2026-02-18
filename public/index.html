@@ -5,99 +5,180 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rock Paper Scissors</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!-- Animated background -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+
+  <!-- Confetti canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
   <div class="container">
-    <h1 class="title">Rock Paper Scissors</h1>
-    <p class="player-count"><span id="player-count">0</span> players online</p>
+    <div class="header">
+      <div class="logo">
+        <span class="logo-icon">&#x1F3AE;</span>
+        <h1 class="title">Rock Paper Scissors</h1>
+      </div>
+      <div class="online-badge">
+        <span class="online-dot"></span>
+        <span><span id="player-count">0</span> online</span>
+      </div>
+    </div>
 
     <!-- JOIN / LOBBY SCREEN -->
     <div id="screen-join" class="screen active">
-      <div id="join-form">
-        <input type="text" id="name-input" placeholder="Enter your name" maxlength="20" autocomplete="off">
-        <button id="btn-join" class="btn btn-primary">Join Game</button>
+      <div id="join-form" class="card">
+        <h2 class="card-title">Enter the Arena</h2>
+        <p class="card-subtitle">Choose your fighter name</p>
+        <div class="input-group">
+          <input type="text" id="name-input" placeholder="Your name..." maxlength="20" autocomplete="off">
+          <button id="btn-join" class="btn btn-primary">
+            <span>Join</span>
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
       </div>
 
       <div id="lobby" class="hidden">
-        <p class="welcome">Welcome, <span id="player-name"></span>!</p>
-        <button id="btn-find-match" class="btn btn-primary">Find Match</button>
-        <button id="btn-leaderboard" class="btn btn-secondary">Leaderboard</button>
-        <p id="match-status" class="status hidden">Searching for opponent...</p>
+        <div class="card">
+          <p class="welcome">Welcome, <span id="player-name" class="highlight"></span></p>
+          <div class="lobby-actions">
+            <button id="btn-find-match" class="btn btn-primary btn-lg">
+              <svg class="btn-icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+              Find Match
+            </button>
+            <button id="btn-leaderboard" class="btn btn-ghost">
+              <svg class="btn-icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              Leaderboard
+            </button>
+          </div>
+          <div id="match-status" class="status-bar hidden">
+            <div class="spinner"></div>
+            <span>Searching for opponent...</span>
+          </div>
+        </div>
       </div>
 
-      <div id="leaderboard-panel" class="hidden">
-        <h2>Leaderboard</h2>
+      <div id="leaderboard-panel" class="card hidden">
+        <div class="card-header">
+          <h2 class="card-title">
+            <span>&#x1F3C6;</span> Leaderboard
+          </h2>
+          <button id="btn-close-leaderboard" class="btn-close">&times;</button>
+        </div>
         <table id="leaderboard-table">
           <thead>
             <tr><th>#</th><th>Player</th><th>W</th><th>L</th><th>Streak</th></tr>
           </thead>
           <tbody id="leaderboard-body"></tbody>
         </table>
-        <button id="btn-close-leaderboard" class="btn btn-secondary">Close</button>
       </div>
     </div>
 
     <!-- GAME SCREEN -->
     <div id="screen-game" class="screen">
-      <div class="game-info">
-        <p class="opponent-label">vs <span id="opponent-name"></span></p>
-        <p class="round-label">Round <span id="round-number">1</span></p>
-        <div class="scoreboard">
-          <span class="score-you">You: <span id="score-you">0</span></span>
-          <span class="score-divider">|</span>
-          <span class="score-opponent">Them: <span id="score-opponent">0</span></span>
+      <div class="card game-card">
+        <div class="game-header">
+          <div class="game-player game-player-you">
+            <span class="game-player-label">You</span>
+            <span id="score-you" class="game-player-score">0</span>
+          </div>
+          <div class="game-vs-badge">
+            <span class="round-badge">R<span id="round-number">1</span></span>
+            <span class="vs-text">VS</span>
+          </div>
+          <div class="game-player game-player-them">
+            <span class="game-player-label"><span id="opponent-name"></span></span>
+            <span id="score-opponent" class="game-player-score">0</span>
+          </div>
+        </div>
+
+        <div class="game-progress">
+          <div class="progress-dots">
+            <span class="progress-dot" data-index="0"></span>
+            <span class="progress-dot" data-index="1"></span>
+            <span class="progress-dot" data-index="2"></span>
+            <span class="progress-dot" data-index="3"></span>
+            <span class="progress-dot" data-index="4"></span>
+          </div>
+        </div>
+
+        <p id="game-status" class="game-status">Make your choice!</p>
+
+        <div class="choices">
+          <button class="choice-btn" data-choice="rock">
+            <span class="choice-emoji">&#x1F44A;</span>
+            <span class="choice-label">Rock</span>
+          </button>
+          <button class="choice-btn" data-choice="paper">
+            <span class="choice-emoji">&#x1F590;</span>
+            <span class="choice-label">Paper</span>
+          </button>
+          <button class="choice-btn" data-choice="scissors">
+            <span class="choice-emoji">&#x270C;&#xFE0F;</span>
+            <span class="choice-label">Scissors</span>
+          </button>
         </div>
       </div>
+    </div>
 
-      <p id="game-status" class="status">Make your choice!</p>
-
-      <div class="choices">
-        <button class="choice-btn" data-choice="rock">
-          <span class="choice-emoji">&#x1F44A;</span>
-          <span class="choice-label">Rock</span>
-        </button>
-        <button class="choice-btn" data-choice="paper">
-          <span class="choice-emoji">&#x1F590;</span>
-          <span class="choice-label">Paper</span>
-        </button>
-        <button class="choice-btn" data-choice="scissors">
-          <span class="choice-emoji">&#x270C;</span>
-          <span class="choice-label">Scissors</span>
-        </button>
-      </div>
+    <!-- COUNTDOWN OVERLAY -->
+    <div id="countdown-overlay" class="countdown-overlay hidden">
+      <span id="countdown-number" class="countdown-number">3</span>
     </div>
 
     <!-- RESULT SCREEN -->
     <div id="screen-result" class="screen">
-      <div class="result-choices">
-        <div class="result-choice result-you">
-          <p>You</p>
-          <span id="result-your-choice" class="result-emoji"></span>
+      <div class="card result-card">
+        <div class="result-battle">
+          <div class="result-fighter result-fighter-you">
+            <span class="result-fighter-label">You</span>
+            <div class="result-fighter-circle">
+              <span id="result-your-choice" class="result-emoji">?</span>
+            </div>
+          </div>
+
+          <div class="result-clash">
+            <div class="clash-burst"></div>
+            <span class="clash-text">VS</span>
+          </div>
+
+          <div class="result-fighter result-fighter-them">
+            <span class="result-fighter-label">Them</span>
+            <div class="result-fighter-circle">
+              <span id="result-opponent-choice" class="result-emoji">?</span>
+            </div>
+          </div>
         </div>
-        <div class="result-vs">VS</div>
-        <div class="result-choice result-them">
-          <p>Them</p>
-          <span id="result-opponent-choice" class="result-emoji"></span>
+
+        <h2 id="result-text" class="result-text"></h2>
+
+        <div class="result-scores">
+          <span class="result-score-you"><span id="result-score-you">0</span></span>
+          <span class="result-score-divider">-</span>
+          <span class="result-score-them"><span id="result-score-opponent">0</span></span>
         </div>
-      </div>
 
-      <h2 id="result-text" class="result-text"></h2>
+        <div id="round-buttons" class="result-actions">
+          <button id="btn-next-round" class="btn btn-primary btn-lg">Next Round</button>
+        </div>
 
-      <div class="result-scores">
-        <span>You: <span id="result-score-you">0</span></span>
-        <span> - </span>
-        <span>Them: <span id="result-score-opponent">0</span></span>
-      </div>
-
-      <div id="round-buttons">
-        <button id="btn-next-round" class="btn btn-primary">Next Round</button>
-      </div>
-
-      <div id="game-over-buttons" class="hidden">
-        <h2 id="game-over-text" class="game-over-text"></h2>
-        <button id="btn-play-again" class="btn btn-primary">Play Again</button>
-        <button id="btn-back-lobby" class="btn btn-secondary">Back to Lobby</button>
-        <p id="rematch-status" class="status hidden"></p>
+        <div id="game-over-buttons" class="result-actions hidden">
+          <h2 id="game-over-text" class="game-over-text"></h2>
+          <div class="game-over-actions">
+            <button id="btn-play-again" class="btn btn-primary btn-lg">Rematch</button>
+            <button id="btn-back-lobby" class="btn btn-ghost">Leave</button>
+          </div>
+          <p id="rematch-status" class="status-bar hidden">
+            <div class="spinner"></div>
+            <span></span>
+          </p>
+        </div>
       </div>
     </div>
   </div>
